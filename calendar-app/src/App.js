@@ -1,5 +1,6 @@
 import logo from './logo.svg';
 import './App.css';
+import { getMonth } from '../components/util.js'
 
 function App() {
   return (
