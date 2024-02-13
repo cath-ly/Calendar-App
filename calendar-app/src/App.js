@@ -1,7 +1,11 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
+
 import { getMonth } from '../components/util.js'
+import CalendarHeader from '../components/CalendarHeader.js';
+import SideBar from '../components/SideBar.js';
+import Month from '../components/Month.js';
 
 function App() {
   return (
