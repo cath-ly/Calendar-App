@@ -8,7 +8,7 @@ import Month from './components/Month.js';
 
 function App() {
   const [currentMonth, setCurrentMonth] = useState(getMonth())
-  console.table(getMonth())
+  
   return (
     <React.Fragment>
       <div className="h-screen flex flex-columns">
