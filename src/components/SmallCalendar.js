@@ -1,7 +1,8 @@
 import dayjs from "dayjs";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import getMonth from "../utils/getMonth";
-import getCurrentDayClass from "../utils/getCurrentDayClass";
+import GlobalContext from "../contexts/GlobalContext";
+import getSmallCalendarDay from "../utils/getSmallCalendarDay";
 
 export default function SmallCalendar() {
   const [currentMonthPos, setCurrentMonthPos] = useState(dayjs().month());
@@ -9,6 +10,13 @@ export default function SmallCalendar() {
   useEffect(() => {
     setCurrentMonth(getMonth(currentMonthPos));
   }, [currentMonthPos]);
+
+  const { monthIndex, setSmallCalendarMonth, selectedDay, setSelectedDay } =
+    useContext(GlobalContext);
+
+  useEffect(() => {
+    setCurrentMonthPos(monthIndex);
+  }, [monthIndex]);
 
   //making this handles universal into utils???
   function handlePrevMonth() {
@@ -49,7 +57,14 @@ export default function SmallCalendar() {
             {row.map((day, idx) => (
               <button
                 key={idx}
-                className={`py-1 w-full ${getCurrentDayClass(day)}`}>
+                onClick={() => {
+                  setSmallCalendarMonth(currentMonthPos);
+                  setSelectedDay(day);
+                }}
+                className={`py-1 w-full ${getSmallCalendarDay(
+                  day,
+                  selectedDay
+                )}`}>
                 <span className="text-sm">{day.format("D")}</span>
               </button>
             ))}
