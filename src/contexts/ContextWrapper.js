@@ -1,12 +1,23 @@
 import dayjs from "dayjs";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import GlobalContext from "./GlobalContext";
+import markEventsReducer from "../utils/markEventsReducer";
+import initEvents from "../utils/initEvents";
 
 export default function ContextWrapper(props) {
   const [monthIndex, setMonthIndex] = useState(dayjs().month());
   const [smallCalendarMonth, setSmallCalendarMonth] = useState(null);
   const [selectedDay, setSelectedDay] = useState(dayjs());
   const [showEventModel, setShowEventModel] = useState(false);
+  const [markedEvents, dispatchMarkedEvent] = useReducer(
+    markEventsReducer,
+    [],
+    initEvents
+  );
+
+  useEffect(() => {
+    localStorage.setItem("markedEvents", JSON.stringify(markedEvents));
+  }, [markedEvents]);
 
   useEffect(() => {
     if (smallCalendarMonth !== null) {
@@ -24,6 +35,7 @@ export default function ContextWrapper(props) {
         setSelectedDay,
         showEventModel,
         setShowEventModel,
+        dispatchMarkedEvent,
       }}>
       {props.children}
     </GlobalContext.Provider>
