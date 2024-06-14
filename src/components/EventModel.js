@@ -5,11 +5,21 @@ import GlobalContext from "../contexts/GlobalContext";
 const labelClasses = ["blue", "red", "yellow", "emerald", "purple", "pink"];
 
 export default function EventModel() {
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState([]);
-  const [selectedLabel, setSelectedLabel] = useState(labelClasses[0]);
-  const { selectedDay, setShowEventModel, dispatchMarkedEvent } =
+  const { selectedDay, setShowEventModel, selectedEvent, dispatchMarkedEvent } =
     useContext(GlobalContext);
+
+  // will incorporate single line if/else statements
+  const [title, setTitle] = useState(selectedEvent ? selectedEvent.title : "");
+
+  const [description, setDescription] = useState(
+    selectedEvent ? selectedEvent.description : ""
+  );
+
+  const [selectedLabel, setSelectedLabel] = useState(
+    selectedEvent
+      ? labelClasses.find((lbl) => lbl === selectedEvent.label)
+      : labelClasses[0]
+  );
 
   function handleConfirmation(e) {
     e.preventDefault();
@@ -18,11 +28,18 @@ export default function EventModel() {
       description,
       label: selectedLabel,
       day: selectedDay.valueOf(),
-      id: Date.now(),
+      id: selectedEvent ? selectedEvent.id : Date.now(),
     };
-    dispatchMarkedEvent({ type: "push", payload: calendarEvent });
+
+    if (selectedEvent) {
+      dispatchMarkedEvent({ type: "update", payload: calendarEvent });
+      console.log("Successfully updated event!");
+    } else {
+      dispatchMarkedEvent({ type: "push", payload: calendarEvent });
+      console.log("Successfully created event!");
+    }
+
     setShowEventModel(false);
-    console.log("Successfully created event!");
   }
 
   return (
@@ -32,9 +49,30 @@ export default function EventModel() {
           <span className="material-icons-outlined text-gray-400">
             drag_handle
           </span>
-          <button onClick={() => setShowEventModel(false)}>
-            <span className="material-icons-outlined text-gray-400">close</span>
-          </button>
+          <div>
+            {
+              //check this area, stuck on selectedEvent
+              selectedEvent && (
+                <span
+                  onClick={() => {
+                    dispatchMarkedEvent({
+                      type: "delete",
+                      payload: selectedEvent,
+                    });
+                    console.log("Successfully deleted event!");
+                    setShowEventModel(false);
+                  }}
+                  className="material-icons-outlined text-gray-400 cursor-pointer">
+                  delete
+                </span>
+              )
+            }
+            <button onClick={() => setShowEventModel(false)}>
+              <span className="material-icons-outlined text-gray-400">
+                close
+              </span>
+            </button>
+          </div>
         </header>
         <div className="p-3">
           <div className="grid grid-cols-1/5 items-end gap-y-7">

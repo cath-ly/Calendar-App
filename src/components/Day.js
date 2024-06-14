@@ -7,7 +7,7 @@ import dayjs from "dayjs";
 //ddd format will giver the day in letters for ex. MON, want to display only the first time of the month to reduce UI clutter
 export default function Day({ day, rowIdx }) {
   const [eventDay, setEventDay] = useState([]);
-  const { setSelectedDay, setShowEventModel, markedEvents } =
+  const { setSelectedDay, setShowEventModel, markedEvents, setSelectedEvent } =
     useContext(GlobalContext);
 
   useEffect(() => {
@@ -36,6 +36,7 @@ export default function Day({ day, rowIdx }) {
         {eventDay.map((event, index) => (
           <div
             key={index}
+            onClick={() => setSelectedEvent(event)}
             className={`bg-${event.label}-200 p-1 mr-3 text-gray-600 text-sm rounded mb-1 truncate`}>
             {event.title}
           </div>
