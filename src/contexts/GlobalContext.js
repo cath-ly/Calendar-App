@@ -11,6 +11,9 @@ const GlobalContext = React.createContext({
   setShowEventModel: () => {},
   selectedEvent: null,
   setSelectedEvent: () => {},
+  labels: [],
+  setLabels: () => {},
+  updateLabel: () => {},
   markedEvents: [],
   dispatchMarkedEvent: ({ type, payload }) => {},
 });

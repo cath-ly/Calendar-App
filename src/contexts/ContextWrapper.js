@@ -10,6 +10,7 @@ export default function ContextWrapper(props) {
   const [selectedDay, setSelectedDay] = useState(dayjs());
   const [showEventModel, setShowEventModel] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
+  const [labels, setLabels] = useState([]);
   const [markedEvents, dispatchMarkedEvent] = useReducer(
     markEventsReducer,
     [],
@@ -18,6 +19,20 @@ export default function ContextWrapper(props) {
 
   useEffect(() => {
     localStorage.setItem("markedEvents", JSON.stringify(markedEvents));
+  }, [markedEvents]);
+
+  useEffect(() => {
+    setLabels((prevLabel) => {
+      return [...new Set(markedEvents.map((event) => event.label))].map(
+        (label) => {
+          const currentLabel = prevLabel.find((lb) => lb.label === label);
+          return {
+            label,
+            checked: currentLabel ? currentLabel.checked : true,
+          };
+        }
+      );
+    });
   }, [markedEvents]);
 
   useEffect(() => {
@@ -32,6 +47,10 @@ export default function ContextWrapper(props) {
     }
   }, [showEventModel]);
 
+  function updateLabel(label) {
+    setLabels(labels.map((lbl) => (lbl.label === label.label ? label : lbl)));
+  }
+
   return (
     <GlobalContext.Provider
       value={{
@@ -45,6 +64,9 @@ export default function ContextWrapper(props) {
         setShowEventModel,
         selectedEvent,
         setSelectedEvent,
+        labels,
+        setLabels,
+        updateLabel,
         markedEvents,
         dispatchMarkedEvent,
       }}>
